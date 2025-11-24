@@ -1,0 +1,35 @@
+import { LogFilter } from '../types';
+
+const BASE_URL = '/api';
+
+export const api = {
+  async getNodes() {
+    const response = await fetch(`${BASE_URL}/nodes`);
+    if (!response.ok) throw new Error('Failed to fetch nodes');
+    return response.json();
+  },
+
+  async getLogs() {
+    const response = await fetch(`${BASE_URL}/logs`);
+    if (!response.ok) throw new Error('Failed to fetch logs');
+    return response.json();
+  },
+
+  async getMetrics() {
+    const response = await fetch(`${BASE_URL}/metrics`);
+    if (!response.ok) throw new Error('Failed to fetch metrics');
+    return response.json();
+  },
+
+  async getCurrentSlot() {
+    const response = await fetch(`${BASE_URL}/solana/slot`);
+    if (!response.ok) throw new Error('Failed to fetch slot');
+    return response.json();
+  },
+
+  async getRecentBlockhash() {
+    const response = await fetch(`${BASE_URL}/solana/blockhash`);
+    if (!response.ok) throw new Error('Failed to fetch blockhash');
+    return response.json();
+  },
+};
