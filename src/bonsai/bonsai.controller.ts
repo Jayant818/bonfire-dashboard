@@ -19,6 +19,11 @@ export class BonsaiController {
     return this.bonsaiService.getLogs();
   }
 
+  @Get('jobs')
+  async getJobs() {
+    return this.bonsaiService.getJobs();
+  }
+
   @Get('metrics')
   async getMetrics() {
     const nodes = await this.bonsaiService.getNodes();

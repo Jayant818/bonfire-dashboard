@@ -34,3 +34,17 @@ export interface Metrics {
   avgLatency: number;
   totalCores: number;
 }
+
+export interface Job {
+  status: string;
+  execution_id: string;
+  node: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JobFilter {
+  status?: string;
+  executionId?: string;
+  node?: string;
+}

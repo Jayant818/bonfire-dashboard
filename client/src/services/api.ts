@@ -1,5 +1,3 @@
-import { LogFilter } from '../types';
-
 const BASE_URL = '/api';
 
 export const api = {
@@ -12,6 +10,12 @@ export const api = {
   async getLogs() {
     const response = await fetch(`${BASE_URL}/logs`);
     if (!response.ok) throw new Error('Failed to fetch logs');
+    return response.json();
+  },
+
+  async getJobs() {
+    const response = await fetch(`${BASE_URL}/jobs`);
+    if (!response.ok) throw new Error('Failed to fetch jobs');
     return response.json();
   },
 

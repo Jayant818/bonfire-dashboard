@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Nodes from './components/Nodes';
+import Jobs from './components/Jobs';
 import Logs from './components/Logs';
 
-type View = 'dashboard' | 'nodes' | 'logs';
+type View = 'dashboard' | 'nodes' | 'jobs' | 'logs';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -15,6 +16,8 @@ const App: React.FC = () => {
         return <Dashboard />;
       case 'nodes':
         return <Nodes />;
+      case 'jobs':
+        return <Jobs />;
       case 'logs':
         return <Logs />;
       default:
