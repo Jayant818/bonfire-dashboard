@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { CacheService } from './cache.service';
+import { Observable } from 'rxjs';
 
 export interface Node {
   pubkey: string;
@@ -355,5 +356,102 @@ export class BonsaiService {
       
       return dummyJobs;
     }
+  }
+
+  getLogsStream(): Observable<MessageEvent> {
+    return new Observable((subscriber) => {
+      const axios = require('axios');
+      
+      const connectToStream = async () => {
+        try {
+          const response = await axios.get('https://bonfire.bonsol.org/logs', {
+            responseType: 'stream',
+            timeout: 0,
+          });
+
+          response.data.on('data', (chunk: Buffer) => {
+            const lines = chunk.toString().split('\n');
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const logData = JSON.parse(line.substring(6));
+                  logData.timestamp = new Date().toISOString();
+                  subscriber.next({ data: JSON.stringify(logData) } as MessageEvent);
+                } catch (e) {
+                  console.error('Failed to parse log:', e);
+                }
+              }
+            }
+          });
+
+          response.data.on('error', (error: any) => {
+            console.error('Log stream error:', error);
+            setTimeout(connectToStream, 5000);
+          });
+
+          response.data.on('end', () => {
+            console.log('Log stream ended, reconnecting...');
+            setTimeout(connectToStream, 1000);
+          });
+        } catch (error) {
+          console.error('Failed to connect to logs stream:', error);
+          setTimeout(connectToStream, 5000);
+        }
+      };
+
+      connectToStream();
+
+      return () => {
+        console.log('Logs stream subscription ended');
+      };
+    });
+  }
+
+  getJobsStream(): Observable<MessageEvent> {
+    return new Observable((subscriber) => {
+      const axios = require('axios');
+      
+      const connectToStream = async () => {
+        try {
+          const response = await axios.get('https://bonfire.bonsol.org/jobs', {
+            responseType: 'stream',
+            timeout: 0,
+          });
+
+          response.data.on('data', (chunk: Buffer) => {
+            const lines = chunk.toString().split('\n');
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const jobData = JSON.parse(line.substring(6));
+                  subscriber.next({ data: JSON.stringify(jobData) } as MessageEvent);
+                } catch (e) {
+                  console.error('Failed to parse job:', e);
+                }
+              }
+            }
+          });
+
+          response.data.on('error', (error: any) => {
+            console.error('Job stream error:', error);
+            setTimeout(connectToStream, 5000);
+          });
+
+          response.data.on('end', () => {
+            console.log('Job stream ended, reconnecting...');
+            setTimeout(connectToStream, 1000);
+          });
+        } catch (error) {
+          console.error('Failed to connect to jobs stream:', error);
+          setTimeout(connectToStream, 5000);
+        }
+      };
+
+      connectToStream();
+
+      return () => {
+        console.log('Jobs stream subscription ended');
+      };
+    });
   }
 }

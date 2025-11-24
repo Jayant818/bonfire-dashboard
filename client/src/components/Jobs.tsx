@@ -11,7 +11,7 @@ const Jobs: React.FC = () => {
     node: '',
   });
 
-  const { jobs: allJobs, loading, refetch } = useJobs();
+  const { jobs: allJobs, loading, clearJobs } = useJobs();
 
   const filteredJobs = useMemo(() => {
     console.log('Filtering jobs, allJobs count:', allJobs.length);
@@ -43,8 +43,10 @@ const Jobs: React.FC = () => {
     setFilters(newFilters);
   };
 
-  const handleRefresh = () => {
-    refetch();
+  const handleClearJobs = () => {
+    if (window.confirm('Are you sure you want to clear all jobs?')) {
+      clearJobs();
+    }
   };
 
   return (
@@ -55,27 +57,27 @@ const Jobs: React.FC = () => {
             Jobs
           </h1>
           <p style={{ color: '#64748b', marginBottom: '32px' }}>
-            Execution jobs across the prover network • {filteredJobs.length} jobs
+            Real-time job execution stream • {filteredJobs.length} jobs {loading && '• Connecting...'}
           </p>
         </div>
         <button
-          onClick={handleRefresh}
-          disabled={loading}
+          onClick={handleClearJobs}
+          disabled={loading || allJobs.length === 0}
           style={{
             padding: '12px 24px',
-            background: loading ? '#334155' : '#10b981',
+            background: loading || allJobs.length === 0 ? '#334155' : '#ef4444',
             border: 'none',
             borderRadius: '8px',
             color: '#fff',
             fontSize: '14px',
             fontWeight: '600',
-            cursor: loading ? 'not-allowed' : 'pointer',
+            cursor: loading || allJobs.length === 0 ? 'not-allowed' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
-          {loading ? '↻ Refreshing...' : '↻ Refresh Jobs'}
+          🗑️ Clear Jobs
         </button>
       </div>
 

@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import LogsFilter from './LogsFilter';
 import LogsTable from './LogsTable';
 import { useLogs } from '../hooks/useLogs';
-import { Log } from '../types';
 
 const Logs: React.FC = () => {
   const [filters, setFilters] = useState({
@@ -11,7 +10,7 @@ const Logs: React.FC = () => {
     jobId: '',
   });
 
-  const { logs: allLogs, loading, refetch } = useLogs();
+  const { logs: allLogs, loading, clearLogs } = useLogs();
 
   const filteredLogs = useMemo(() => {
     let result = allLogs;
@@ -37,8 +36,10 @@ const Logs: React.FC = () => {
     setFilters(newFilters);
   };
 
-  const handleRefresh = () => {
-    refetch();
+  const handleClearLogs = () => {
+    if (window.confirm('Are you sure you want to clear all logs?')) {
+      clearLogs();
+    }
   };
 
   return (
@@ -49,27 +50,27 @@ const Logs: React.FC = () => {
             Logs
           </h1>
           <p style={{ color: '#64748b', marginBottom: '32px' }}>
-            Live tail of prover execution logs • {filteredLogs.length} logs
+            Live stream of prover execution logs • {filteredLogs.length} logs {loading && '• Connecting...'}
           </p>
         </div>
         <button
-          onClick={handleRefresh}
-          disabled={loading}
+          onClick={handleClearLogs}
+          disabled={loading || allLogs.length === 0}
           style={{
             padding: '12px 24px',
-            background: loading ? '#334155' : '#10b981',
+            background: loading || allLogs.length === 0 ? '#334155' : '#ef4444',
             border: 'none',
             borderRadius: '8px',
             color: '#fff',
             fontSize: '14px',
             fontWeight: '600',
-            cursor: loading ? 'not-allowed' : 'pointer',
+            cursor: loading || allLogs.length === 0 ? 'not-allowed' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
-          {loading ? 'Refreshing...' : 'Refresh Logs'}
+          🗑️ Clear Logs
         </button>
       </div>
 

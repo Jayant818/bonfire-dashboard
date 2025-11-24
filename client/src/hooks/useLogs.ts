@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { api } from '../services/api';
 import { Log } from '../types';
 
 export const useLogs = () => {
@@ -7,25 +6,59 @@ export const useLogs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchLogs = async () => {
-    try {
-      setLoading(true);
-      const data = await api.getLogs();
-      setLogs(data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch logs');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchLogs();
-    const interval = setInterval(fetchLogs, 30000);
-    return () => clearInterval(interval);
+    let eventSource: EventSource | null = null;
+
+    const connectToStream = () => {
+      try {
+        eventSource = new EventSource('/api/logs/stream');
+
+        eventSource.onopen = () => {
+          console.log('Logs SSE connection opened');
+          setLoading(false);
+          setError(null);
+        };
+
+        eventSource.onmessage = (event) => {
+          try {
+            const newLog = JSON.parse(event.data);
+            setLogs((prevLogs) => {
+              const updatedLogs = [...prevLogs, newLog];
+              // Keep only last 1000 logs
+              return updatedLogs.slice(-1000);
+            });
+          } catch (err) {
+            console.error('Failed to parse log:', err);
+          }
+        };
+
+        eventSource.onerror = (err) => {
+          console.error('Logs SSE error:', err);
+          setError('Connection lost. Reconnecting...');
+          eventSource?.close();
+          
+          // Reconnect after 5 seconds
+          setTimeout(connectToStream, 5000);
+        };
+      } catch (err) {
+        console.error('Failed to connect to logs stream:', err);
+        setError('Failed to connect to logs stream');
+        setLoading(false);
+      }
+    };
+
+    connectToStream();
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
   }, []);
 
-  return { logs, loading, error, refetch: fetchLogs };
+  const clearLogs = () => {
+    setLogs([]);
+  };
+
+  return { logs, loading, error, clearLogs };
 };
