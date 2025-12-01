@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
         Dashboard
       </h1>
       <p style={{ color: '#64748b', marginBottom: '32px' }}>
-        Overview of Bonsai prover network
+        Overview of Bonfire prover network
       </p>
 
       {metricsLoading ? (

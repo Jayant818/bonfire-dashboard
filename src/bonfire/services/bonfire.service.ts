@@ -41,8 +41,8 @@ export interface Job {
 }
 
 @Injectable()
-export class BonsaiService {
-  private readonly BONSAI_API = 'https://bonfire.bonsol.org';
+export class BonfireService {
+  private readonly BONFIRE_API = 'https://bonfire.bonsol.org';
 
   constructor(private readonly cacheService: CacheService) {}
 
@@ -50,7 +50,7 @@ export class BonsaiService {
     const cached = await this.cacheService.get<Node[]>('nodes');
     if (cached) return cached;
 
-    const response = await axios.get(`${this.BONSAI_API}/nodes`);
+    const response = await axios.get(`${this.BONFIRE_API}/nodes`);
     const nodes = response.data;
     await this.cacheService.set('nodes', nodes, 30);
     return nodes;
@@ -58,7 +58,7 @@ export class BonsaiService {
 
   async getLogs(): Promise<Log[]> {
     try {
-      const response = await axios.get(`${this.BONSAI_API}/logs`, {
+      const response = await axios.get(`${this.BONFIRE_API}/logs`, {
         timeout: 5000,
       });
       
@@ -216,7 +216,7 @@ export class BonsaiService {
 
   async getJobs(): Promise<Job[]> {
     try {
-      const response = await axios.get(`${this.BONSAI_API}/jobs`, {
+      const response = await axios.get(`${this.BONFIRE_API}/jobs`, {
         timeout: 5000,
       });
       
@@ -283,7 +283,7 @@ export class BonsaiService {
         },
       ];
       
-      jobs = dummyJobs;
+      // jobs = dummyJobs;
       
       if (Array.isArray(response.data)) {
         jobs = [...jobs, ...response.data];
@@ -354,7 +354,8 @@ export class BonsaiService {
         },
       ];
       
-      return dummyJobs;
+      // return dummyJobs;
+      return [];
     }
   }
 
@@ -403,54 +404,6 @@ export class BonsaiService {
 
       return () => {
         console.log('Logs stream subscription ended');
-      };
-    });
-  }
-
-  getJobsStream(): Observable<MessageEvent> {
-    return new Observable((subscriber) => {
-      const axios = require('axios');
-      
-      const connectToStream = async () => {
-        try {
-          const response = await axios.get('https://bonfire.bonsol.org/jobs', {
-            responseType: 'stream',
-            timeout: 0,
-          });
-
-          response.data.on('data', (chunk: Buffer) => {
-            const lines = chunk.toString().split('\n');
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                try {
-                  const jobData = JSON.parse(line.substring(6));
-                  subscriber.next({ data: JSON.stringify(jobData) } as MessageEvent);
-                } catch (e) {
-                  console.error('Failed to parse job:', e);
-                }
-              }
-            }
-          });
-
-          response.data.on('error', (error: any) => {
-            console.error('Job stream error:', error);
-            setTimeout(connectToStream, 5000);
-          });
-
-          response.data.on('end', () => {
-            console.log('Job stream ended, reconnecting...');
-            setTimeout(connectToStream, 1000);
-          });
-        } catch (error) {
-          console.error('Failed to connect to jobs stream:', error);
-          setTimeout(connectToStream, 5000);
-        }
-      };
-
-      connectToStream();
-
-      return () => {
-        console.log('Jobs stream subscription ended');
       };
     });
   }

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { BonsaiModule } from './bonsai/bonsai.module';
+import { BonfireModule } from './bonfire/bonfire.module';
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { BonsaiModule } from './bonsai/bonsai.module';
       rootPath: join(process.cwd(), 'client', 'dist'),
       exclude: ['/api(.*)'],
     }),
-    BonsaiModule,
+    BonfireModule,
   ],
 })
 export class AppModule {}

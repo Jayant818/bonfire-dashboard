@@ -15,11 +15,11 @@ const JobsStats: React.FC<JobsStatsProps> = ({ jobs }) => {
   };
 
   const cards = [
-    { label: 'Total Jobs', value: stats.total, icon: '📦', color: '#64748b' },
-    { label: 'Submitted', value: stats.submitted, icon: '📝', color: '#3b82f6' },
-    { label: 'Running', value: stats.running, icon: '⚡', color: '#f59e0b' },
-    { label: 'Completed', value: stats.completed, icon: '✅', color: '#10b981' },
-    { label: 'Failed', value: stats.failed, icon: '❌', color: '#ef4444' },
+    { label: 'Total Jobs', value: stats.total, icon: '', color: '#64748b' },
+    { label: 'Submitted', value: stats.submitted, icon: '', color: '#3b82f6' },
+    { label: 'Running', value: stats.running, icon: '', color: '#f59e0b' },
+    { label: 'Completed', value: stats.completed, icon: '', color: '#10b981' },
+    { label: 'Failed', value: stats.failed, icon: '', color: '#ef4444' },
   ];
 
   return (

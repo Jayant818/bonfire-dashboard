@@ -7,10 +7,10 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'nodes', label: 'Nodes', icon: '🖥️' },
-    { id: 'jobs', label: 'Jobs', icon: '📦' },
-    { id: 'logs', label: 'Logs', icon: '📋' },
+    { id: 'dashboard', label: 'Dashboard', icon: '' },
+    { id: 'nodes', label: 'Nodes', icon: '' },
+    { id: 'jobs', label: 'Jobs', icon: '' },
+    { id: 'logs', label: 'Logs', icon: '' },
   ];
 
   return (
@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
     >
       <div style={{ marginBottom: '40px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>
-          🌳 BONSAI
+          BONFIRE
         </h1>
         <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
           Prover Network

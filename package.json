@@ -1,5 +1,5 @@
 {
-  "name": "bonsai-dashboard",
+  "name": "bonfire-dashboard",
   "version": "1.0.0",
   "scripts": {
     "build": "npm run build:client && npm run build:server",

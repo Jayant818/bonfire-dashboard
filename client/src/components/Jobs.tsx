@@ -11,7 +11,7 @@ const Jobs: React.FC = () => {
     node: '',
   });
 
-  const { jobs: allJobs, loading, clearJobs } = useJobs();
+  const { jobs: allJobs, loading, refetch, clearJobs } = useJobs();
 
   const filteredJobs = useMemo(() => {
     console.log('Filtering jobs, allJobs count:', allJobs.length);
@@ -57,28 +57,49 @@ const Jobs: React.FC = () => {
             Jobs
           </h1>
           <p style={{ color: '#64748b', marginBottom: '32px' }}>
-            Real-time job execution stream • {filteredJobs.length} jobs {loading && '• Connecting...'}
+            Auto-refreshing every 5 seconds • {filteredJobs.length} jobs
           </p>
         </div>
-        <button
-          onClick={handleClearJobs}
-          disabled={loading || allJobs.length === 0}
-          style={{
-            padding: '12px 24px',
-            background: loading || allJobs.length === 0 ? '#334155' : '#ef4444',
-            border: 'none',
-            borderRadius: '8px',
-            color: '#fff',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: loading || allJobs.length === 0 ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          🗑️ Clear Jobs
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button
+            onClick={() => refetch()}
+            disabled={loading}
+            style={{
+              padding: '12px 24px',
+              background: loading ? '#334155' : '#10b981',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#fff',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            {loading ? '↻ Refreshing...' : '↻ Refresh'}
+          </button>
+          <button
+            onClick={handleClearJobs}
+            disabled={loading || allJobs.length === 0}
+            style={{
+              padding: '12px 24px',
+              background: loading || allJobs.length === 0 ? '#334155' : '#ef4444',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#fff',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: loading || allJobs.length === 0 ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            🗑️ Clear
+          </button>
+        </div>
       </div>
 
       <JobsStats jobs={allJobs} />
