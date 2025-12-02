@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build",
+    "build:client": "vite build --mode production",
     "build:server": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",

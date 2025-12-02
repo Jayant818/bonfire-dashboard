@@ -1,4 +1,6 @@
-const BASE_URL = '/api';
+const BASE_URL = (import.meta as any).env.PROD
+  ? 'https://api.explorer.bonsol.org/api'
+  : '/api';
 
 export const api = {
   async getNodes() {
