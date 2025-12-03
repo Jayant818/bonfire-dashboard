@@ -5,6 +5,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   await app.listen(3002);
-  console.log('Bonfire Dashboard running on http://localhost:3002');
+  console.log('Bonfire Dashboard running on http://0.0.0.0:3002');
 }
 bootstrap();

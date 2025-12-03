@@ -1,14 +1,14 @@
-import { Controller, Get, Query, Sse } from '@nestjs/common';
+import { Controller, Get, Sse } from '@nestjs/common';
 import { BonfireService } from './services/bonfire.service';
 import { SolanaService } from './services/solana.service';
-import { Observable, interval, switchMap, map, concat, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Controller('api')
 export class BonfireController {
   constructor(
     private readonly bonfireService: BonfireService,
     private readonly solanaService: SolanaService,
-  ) {}
+  ) { }
 
   @Get('nodes')
   async getNodes() {
@@ -44,5 +44,10 @@ export class BonfireController {
   @Get('solana/blockhash')
   async getRecentBlockhash() {
     return this.solanaService.getRecentBlockhash();
+  }
+
+  @Get('health')
+  async getHealth() {
+    return "OK";
   }
 }
