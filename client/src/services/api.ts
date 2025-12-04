@@ -15,6 +15,10 @@ export const api = {
     return response.json();
   },
 
+  getLogsStream() {
+    return new EventSource(`${BASE_URL}/logs/stream`);
+  },
+
   async getJobs() {
     const response = await fetch(`${BASE_URL}/jobs`);
     if (!response.ok) throw new Error('Failed to fetch jobs');

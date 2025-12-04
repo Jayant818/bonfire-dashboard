@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Log } from '../types';
+import { api } from '../services/api';
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -11,7 +12,7 @@ export const useLogs = () => {
 
     const connectToStream = () => {
       try {
-        eventSource = new EventSource('/api/logs/stream');
+        eventSource = api.getLogsStream();
 
         eventSource.onopen = () => {
           console.log('Logs SSE connection opened');
@@ -36,7 +37,7 @@ export const useLogs = () => {
           console.error('Logs SSE error:', err);
           setError('Connection lost. Reconnecting...');
           eventSource?.close();
-          
+
           // Reconnect after 5 seconds
           setTimeout(connectToStream, 5000);
         };
