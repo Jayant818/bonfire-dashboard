@@ -16,6 +16,7 @@ FRONTEND_BUILD_DIR ?= dist
 S3_BUCKET ?= explorer.bonsol.org
 AWS_PROFILE ?= bonsol
 AWS_REGION ?= us-east-1
+CLOUDFRONT_DISTRIBUTION_ID ?= E2YJYRFOAAOWEH
 
 # ===== Helpers =====
 define check-cmd
@@ -73,6 +74,12 @@ deploy-frontend: build-frontend
 	$(call check-cmd,aws)
 	@echo "Uploading HTML with no-cache to s3://$(S3_BUCKET)/"
 	aws s3 sync "$(CLIENT_DIR)/$(FRONTEND_BUILD_DIR)/" "s3://$(S3_BUCKET)/" --delete --profile $(AWS_PROFILE) 
+	@if [ -n "$(CLOUDFRONT_DISTRIBUTION_ID)" ]; then \
+		echo "Creating CloudFront invalidation for distribution $(CLOUDFRONT_DISTRIBUTION_ID)"; \
+		aws cloudfront create-invalidation --distribution-id $(CLOUDFRONT_DISTRIBUTION_ID) --paths "/*" --profile $(AWS_PROFILE); \
+	else \
+		echo "Skipping CloudFront invalidation (CLOUDFRONT_DISTRIBUTION_ID not set)"; \
+	fi
 
 # ===== Combined =====
 .PHONY: all
