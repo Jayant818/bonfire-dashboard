@@ -214,6 +214,16 @@ export class BonfireService {
     };
   }
 
+  private mapJobStatus(status: string): string {
+    const statusMap: Record<string, string> = {
+      'Submitted': 'Submitted',
+      'Claimed': 'Running',
+      'Done': 'Completed',
+      'Failed': 'Failed',
+    };
+    return statusMap[status] || status;
+  }
+
   async getJobs(): Promise<Job[]> {
     try {
       const response = await axios.get(`${this.BONFIRE_API}/jobs`, {
@@ -286,7 +296,11 @@ export class BonfireService {
       // jobs = dummyJobs;
       
       if (Array.isArray(response.data)) {
-        jobs = [...jobs, ...response.data];
+        const mappedJobs = response.data.map((job: Job) => ({
+          ...job,
+          status: this.mapJobStatus(job.status),
+        }));
+        jobs = [...jobs, ...mappedJobs];
       }
 
       return jobs;
