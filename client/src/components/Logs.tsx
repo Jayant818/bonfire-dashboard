@@ -10,7 +10,14 @@ const Logs: React.FC = () => {
     jobId: '',
   });
 
-  const { logs: allLogs, loading, clearLogs } = useLogs();
+  const { 
+    logs: allLogs, 
+    loading, 
+    clearLogs,
+    loadMoreHistory,
+    hasMoreHistory,
+    loadingHistory
+  } = useLogs();
 
   const filteredLogs = useMemo(() => {
     let result = allLogs;
@@ -76,7 +83,12 @@ const Logs: React.FC = () => {
 
       <LogsFilter filters={filters} onFilterChange={handleFilterChange} />
 
-      <LogsTable logs={filteredLogs} />
+      <LogsTable 
+        logs={filteredLogs} 
+        onScrollTop={loadMoreHistory}
+        loadingHistory={loadingHistory}
+        hasMoreHistory={hasMoreHistory}
+      />
     </div>
   );
 };

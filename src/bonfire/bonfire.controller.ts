@@ -1,5 +1,5 @@
-import { Controller, Get, Sse } from '@nestjs/common';
-import { BonfireService } from './services/bonfire.service';
+import { Controller, Get, Sse, Query } from '@nestjs/common';
+import { BonfireService, HistoricalLogFilter } from './services/bonfire.service';
 import { SolanaService } from './services/solana.service';
 import { Observable } from 'rxjs';
 
@@ -23,6 +23,11 @@ export class BonfireController {
   @Sse('logs/stream')
   logsStream(): Observable<MessageEvent> {
     return this.bonfireService.getLogsStream();
+  }
+
+  @Get('logs/history')
+  async getHistoricalLogs(@Query() filter: HistoricalLogFilter) {
+    return this.bonfireService.getHistoricalLogs(filter);
   }
 
   @Get('jobs')
