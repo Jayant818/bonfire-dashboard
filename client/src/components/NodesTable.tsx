@@ -39,6 +39,9 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
               Pubkey
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+              Version
+            </th>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
               CPU
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
@@ -73,6 +76,9 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
                   {truncate(node.pubkey, 12)}
                 </td>
                 <td style={{ padding: '16px', fontSize: '14px', color: '#e2e8f0' }}>
+                  {node.hw.version}
+                </td>
+                <td style={{ padding: '16px', fontSize: '14px', color: '#e2e8f0' }}>
                   {truncate(node.hw.cpu_type, 20)}
                 </td>
                 <td style={{ padding: '16px', fontSize: '14px', color: '#e2e8f0' }}>
@@ -90,7 +96,7 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
               </tr>
               {expandedRow === node.pubkey && (
                 <tr style={{ borderBottom: index < nodes.length - 1 ? '1px solid #334155' : 'none' }}>
-                  <td colSpan={7} style={{ padding: '24px', background: '#0f172a' }}>
+                  <td colSpan={8} style={{ padding: '24px', background: '#0f172a' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                       <div>
                         <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '16px' }}>
@@ -103,6 +109,14 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
                             </span>
                             <span style={{ fontSize: '14px', color: '#e2e8f0', fontFamily: 'monospace', wordBreak: 'break-all' }}>
                               {node.pubkey}
+                            </span>
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              Version
+                            </span>
+                            <span style={{ fontSize: '14px', color: '#e2e8f0' }}>
+                              {node.hw.version}
                             </span>
                           </div>
                           <div>

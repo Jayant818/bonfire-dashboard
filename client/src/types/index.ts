@@ -15,6 +15,7 @@ export interface LogFilter {
 export interface Node {
   pubkey: string;
   hw: {
+    version: string;
     cpu_type: string;
     cpu_mhz: number;
     cpu_cores: number;
