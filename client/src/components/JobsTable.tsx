@@ -23,6 +23,21 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs }) => {
     }
   };
 
+  const getStatusBg = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return 'var(--accent-success-bg)'; // uses your rgba
+      case 'Running':
+        return '#f59e0b20';
+      case 'Failed':
+        return '#ef444420';
+      case 'Submitted':
+        return '#3b82f620';
+      default:
+        return 'transparent';
+    }
+  };
+
   const formatTimestamp = (timestamp: string) => {
     try {
       return new Date(timestamp).toLocaleString();
@@ -70,13 +85,13 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs }) => {
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', width: '40px' }}>
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
-              Status
-            </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Execution ID
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Node
+            </th>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
+              Status
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Created At
@@ -121,25 +136,25 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs }) => {
                   <td style={{ padding: '16px', fontSize: '18px', color: 'var(--text-tertiary)' }}>
                     {expandedRow === job.execution_id ? '▼' : '▶'}
                   </td>
-                  <td style={{ padding: '16px' }}>
-                    <span
-                      style={{
-                        padding: '4px 12px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        background: `${getStatusColor(job.status)}20`,
-                        color: getStatusColor(job.status),
-                      }}
-                    >
-                      {job.status}
-                    </span>
-                  </td>
                   <td style={{ padding: '16px', fontSize: '14px', fontFamily: 'Geist Mono, monospace', color: 'var(--text-primary)' }}>
                     {truncate(job.execution_id, 30)}
                   </td>
                   <td style={{ padding: '16px', fontSize: '14px', fontFamily: 'Geist Mono, monospace', color: 'var(--text-secondary)' }}>
                     {truncate(job.node, 12)}
+                  </td>
+                  <td style={{ padding: '16px' }}>
+                  <span
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: getStatusBg(job.status),
+                      color: getStatusColor(job.status),
+                    }}
+                  >
+                    {job.status}
+                  </span>
                   </td>
                   <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'Geist Mono, monospace' }}>
                     {formatTimestamp(job.created_at)}

@@ -124,7 +124,12 @@ const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
 
       <div style={{ height: 350, width: '100%' }}>
         <ResponsiveContainer>
-          <BarChart data={data} barGap={0} barCategoryGap="20%">
+          <BarChart 
+            data={data} 
+            barGap={0} 
+            barCategoryGap="20%"
+            margin={{ top: 20, right: 30, left: 50, bottom: 5 }}
+          >
             <defs>
               <linearGradient id="latencyBarGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--accent-success)" stopOpacity={0.8} />
@@ -154,7 +159,8 @@ const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
               label={{ 
                 value: 'Latency (ms)', 
                 angle: -90, 
-                position: 'insideLeft', 
+                position: 'insideLeft',
+                dx: -20,
                 style: { fill: 'var(--text-tertiary)', fontSize: '12px' } 
               }}
             />
