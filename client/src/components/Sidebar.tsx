@@ -25,14 +25,36 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
         borderRight: '1px solid var(--border-subtle)',
       }}
     >
-      <div style={{ marginBottom: '40px', paddingLeft: '12px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bolder', color: '#001300', letterSpacing: '-0.5px', }}>
-          BONFIRE
-        </h1>
-        <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-          Prover Network
-        </p>
-      </div>
+   <div
+  style={{
+    marginBottom: '40px',
+    paddingLeft: '12px',
+  }}
+>
+  <h1
+    style={{
+      fontSize: '32px',
+      fontWeight: 900,
+      letterSpacing: '-0.5px',
+      margin: 0,
+      textShadow: '0 0 12px rgba(0, 255, 120, 0.35)',
+      cursor: 'default',
+    }}
+  >
+    BONFIRE
+  </h1>
+
+  <p
+    style={{
+      fontSize: '13px',
+      color: 'var(--text-tertiary)',
+      marginTop: '6px',
+      letterSpacing: '0.3px',
+    }}
+  >
+    Prover Network
+  </p>
+  </div>
 
       <div style={{ paddingLeft: '12px', marginBottom: '12px', fontSize: '12px', fontWeight: '600', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
         Menu

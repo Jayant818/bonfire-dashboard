@@ -14,11 +14,11 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
   };
 
   const cards = [
-    { label: 'Total Nodes', value: metrics.totalNodes, trend: '+12%' },
-    { label: 'Total GPUs', value: metrics.totalGpus, trend: '+5%' },
-    { label: 'Total Memory', value: formatMemory(metrics.totalMemory), trend: '+2%' },
-    { label: 'Avg Latency', value: `${metrics.avgLatency.toFixed(0)}ms`, trend: '-15ms' },
-    { label: 'Total Cores', value: metrics.totalCores, trend: '+8%' },
+    { label: 'Total Nodes', value: metrics.totalNodes },
+    { label: 'Total GPUs', value: metrics.totalGpus },
+    { label: 'Total Memory', value: formatMemory(metrics.totalMemory) },
+    { label: 'Avg Latency', value: `${metrics.avgLatency.toFixed(0)}ms` },
+    { label: 'Total Cores', value: metrics.totalCores },
   ];
 
   return (
@@ -44,21 +44,6 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)', fontWeight: '500' }}>
               {card.label}
             </p>
-            <div
-              style={{
-                background: 'var(--accent-success-bg)',
-                color: 'var(--accent-success)',
-                padding: '4px 8px',
-                borderRadius: '999px',
-                fontSize: '12px',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <span style={{ fontSize: '10px' }}>▲</span> {card.trend}
-            </div>
           </div>
           <p style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: 'Geist Mono, monospace', letterSpacing: '-1px' }}>
             {card.value}

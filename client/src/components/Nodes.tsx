@@ -24,9 +24,6 @@ const Nodes: React.FC = () => {
       </p>
 
       <div style={{ marginBottom: '40px' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
-          Latency Distribution
-        </h2>
         <LatencyChart nodes={nodes} />
       </div>
 

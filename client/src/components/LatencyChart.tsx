@@ -1,5 +1,15 @@
-import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useMemo } from 'react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  ReferenceLine,
+} from 'recharts';
 import { Node } from '../types';
 
 interface LatencyChartProps {
@@ -7,64 +17,174 @@ interface LatencyChartProps {
 }
 
 const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
-  const data = nodes.map((node, index) => ({
-    name: `Node ${index + 1}`,
-    pubkey: node.pubkey.slice(0, 8),
-    latency: node.latency,
-  }));
+  const data = useMemo(() => {
+    return nodes
+      .map((node) => ({
+        pubkey: node.pubkey,
+        shortPubkey: `${node.pubkey.slice(0, 4)}...${node.pubkey.slice(-4)}`,
+        latency: node.latency,
+        hw: node.hw,
+      }))
+      .sort((a, b) => a.latency - b.latency);
+  }, [nodes]);
+
+  const averageLatency = useMemo(() => {
+    if (nodes.length === 0) return 0;
+    return nodes.reduce((acc, node) => acc + node.latency, 0) / nodes.length;
+  }, [nodes]);
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div
+          style={{
+            background: 'rgba(9, 9, 11, 0.95)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '12px',
+            padding: '16px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(8px)',
+            minWidth: '240px',
+          }}
+        >
+          <div style={{ marginBottom: '12px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '8px' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', display: 'block' }}>
+              Node Pubkey
+            </span>
+            <span style={{ fontFamily: 'monospace', color: 'var(--accent-success)', fontSize: '14px' }}>
+              {data.pubkey}
+            </span>
+          </div>
+          
+          <div style={{ display: 'grid', gap: '8px' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Latency</span>
+              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>
+                {data.latency} ms
+              </span>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>CPU</span>
+              <span style={{ fontSize: '12px', color: '#fff', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'right' }}>
+                {data.hw.cpu_type}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Cores</span>
+              <span style={{ fontSize: '12px', color: '#fff' }}>
+                {data.hw.cpu_cores}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Memory</span>
+              <span style={{ fontSize: '12px', color: '#fff' }}>
+                {(data.hw.memory_bytes / (1024 ** 3)).toFixed(1)} GB
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div
       style={{
         background: 'var(--bg-card)',
         padding: '24px',
-        borderRadius: '12px',
+        borderRadius: '16px',
         border: '1px solid var(--border-subtle)',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       }}
     >
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data}>
-          <defs>
-            <linearGradient id="colorLatency" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#22c55e" stopOpacity={0.1}/>
-              <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid stroke="var(--border-subtle)" vertical={false} strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="pubkey" 
-            stroke="var(--text-tertiary)"
-            tick={{ fill: 'var(--text-tertiary)', fontSize: 12 }}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis 
-            stroke="var(--text-tertiary)"
-            tick={{ fill: 'var(--text-tertiary)', fontSize: 12 }}
-            tickLine={false}
-            axisLine={false}
-            label={{ value: 'Latency (ms)', angle: -90, position: 'insideLeft', style: { fill: 'var(--text-tertiary)' } }}
-          />
-          <Tooltip
-            contentStyle={{
-              background: '#000',
-              border: '1px solid #333',
-              borderRadius: '8px',
-              color: 'var(--text-primary)',
-            }}
-            labelFormatter={(value) => `Pubkey: ${value}`}
-            formatter={(value: number) => [`${value}ms`, 'Latency']}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="latency" 
-            stroke="#22c55e" 
-            strokeWidth={2}
-            fillOpacity={1} 
-            fill="url(#colorLatency)" 
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>
+            Network Latency Distribution
+          </h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
+            Real-time latency metrics across {nodes.length} active prover nodes
+          </p>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginRight: '8px' }}>
+            Average
+          </span>
+          <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--accent-success)', fontFamily: 'Geist Mono, monospace' }}>
+            {averageLatency.toFixed(0)}
+            <span style={{ fontSize: '14px', marginLeft: '2px', opacity: 0.7 }}>ms</span>
+          </span>
+        </div>
+      </div>
+
+      <div style={{ height: 350, width: '100%' }}>
+        <ResponsiveContainer>
+          <BarChart data={data} barGap={0} barCategoryGap="20%">
+            <defs>
+              <linearGradient id="latencyBarGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--accent-success)" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="var(--accent-success)" stopOpacity={0.3} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid 
+              vertical={false} 
+              stroke="var(--border-subtle)" 
+              strokeDasharray="3 3" 
+              opacity={0.4}
+            />
+            <XAxis
+              dataKey="shortPubkey"
+              stroke="var(--text-tertiary)"
+              tick={{ fill: 'var(--text-tertiary)', fontSize: 10, fontFamily: 'monospace' }}
+              tickLine={false}
+              axisLine={false}
+              dy={10}
+            />
+            <YAxis
+              stroke="var(--text-tertiary)"
+              tick={{ fill: 'var(--text-tertiary)', fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+              dx={-10}
+              label={{ 
+                value: 'Latency (ms)', 
+                angle: -90, 
+                position: 'insideLeft', 
+                style: { fill: 'var(--text-tertiary)', fontSize: '12px' } 
+              }}
+            />
+            <Tooltip 
+              cursor={{ fill: 'var(--bg-element)', opacity: 0.4 }}
+              content={<CustomTooltip />} 
+            />
+            <ReferenceLine 
+              y={averageLatency} 
+              stroke="var(--accent-success)" 
+              strokeDasharray="3 3" 
+              opacity={0.5}
+            />
+            <Bar 
+              dataKey="latency" 
+              radius={[4, 4, 0, 0]}
+              animationDuration={1500}
+              fill="url(#latencyBarGradient)"
+            >
+              {data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.latency > averageLatency * 1.5 ? 'var(--accent-danger)' : 'url(#latencyBarGradient)'}
+                  opacity={entry.latency > averageLatency * 1.5 ? 0.8 : 1}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
