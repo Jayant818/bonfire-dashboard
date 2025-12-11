@@ -3,6 +3,7 @@ import { FiRefreshCw, FiTrash2 } from 'react-icons/fi';
 import JobsFilter from './JobsFilter';
 import JobsTable from './JobsTable';
 import JobsStats from './JobsStats';
+import CustomModal from './Modal';
 import { useJobs } from '../hooks/useJobs';
 
 const Jobs: React.FC = () => {
@@ -11,6 +12,7 @@ const Jobs: React.FC = () => {
     executionId: '',
     node: '',
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { jobs: allJobs, loading, refetch, clearJobs } = useJobs();
 
@@ -45,9 +47,12 @@ const Jobs: React.FC = () => {
   };
 
   const handleClearJobs = () => {
-    if (window.confirm('Are you sure you want to clear all jobs?')) {
-      clearJobs();
-    }
+    setModalIsOpen(true);
+  };
+
+  const confirmClearJobs = () => {
+    clearJobs();
+    setModalIsOpen(false);
   };
 
   const baseButtonStyle: React.CSSProperties = {
@@ -122,6 +127,14 @@ const Jobs: React.FC = () => {
       <JobsStats jobs={allJobs} />
       <JobsFilter filters={filters} onFilterChange={handleFilterChange} />
       <JobsTable jobs={filteredJobs} />
+      <CustomModal
+        isOpen={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        onConfirm={confirmClearJobs}
+      >
+        <h2>Confirm Clear</h2>
+        <p>Are you sure you want to clear all jobs?</p>
+      </CustomModal>
     </div>
   );
 };

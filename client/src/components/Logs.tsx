@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { FiTrash2 } from 'react-icons/fi';
 import LogsFilter from './LogsFilter';
 import LogsTable from './LogsTable';
+import CustomModal from './Modal';
 import { useLogs } from '../hooks/useLogs';
 
 const Logs: React.FC = () => {
@@ -10,6 +11,7 @@ const Logs: React.FC = () => {
     imageId: '',
     jobId: '',
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { logs: allLogs, loading, clearLogs } = useLogs();
 
@@ -38,9 +40,12 @@ const Logs: React.FC = () => {
   };
 
   const handleClearLogs = () => {
-    if (window.confirm('Are you sure you want to clear all logs?')) {
-      clearLogs();
-    }
+    setModalIsOpen(true);
+  };
+
+  const confirmClearLogs = () => {
+    clearLogs();
+    setModalIsOpen(false);
   };
 
   const baseButtonStyle: React.CSSProperties = {
@@ -97,6 +102,14 @@ const Logs: React.FC = () => {
       <LogsFilter filters={filters} onFilterChange={handleFilterChange} />
 
       <LogsTable logs={filteredLogs} />
+      <CustomModal
+        isOpen={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        onConfirm={confirmClearLogs}
+      >
+        <h2>Confirm Clear</h2>
+        <p>Are you sure you want to clear all logs?</p>
+      </CustomModal>
     </div>
   );
 };

@@ -135,6 +135,10 @@ const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
                 <stop offset="0%" stopColor="var(--accent-success)" stopOpacity={0.8} />
                 <stop offset="100%" stopColor="var(--accent-success)" stopOpacity={0.3} />
               </linearGradient>
+              <linearGradient id="latencyDangerGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--accent-danger)" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="var(--accent-danger)" stopOpacity={0.3} />
+              </linearGradient>
             </defs>
             <CartesianGrid 
               vertical={false} 
@@ -183,8 +187,7 @@ const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
               {data.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.latency > averageLatency * 1.5 ? 'var(--accent-danger)' : 'url(#latencyBarGradient)'}
-                  opacity={entry.latency > averageLatency * 1.5 ? 0.8 : 1}
+                  fill={entry.latency > averageLatency * 1.5 ? 'url(#latencyDangerGradient)' : 'url(#latencyBarGradient)'}
                 />
               ))}
             </Bar>
