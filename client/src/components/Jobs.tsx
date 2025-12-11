@@ -5,6 +5,7 @@ import JobsTable from './JobsTable';
 import JobsStats from './JobsStats';
 import CustomModal from './Modal';
 import { useJobs } from '../hooks/useJobs';
+import Button from './common/Button';
 
 const Jobs: React.FC = () => {
   const [filters, setFilters] = useState({
@@ -55,40 +56,6 @@ const Jobs: React.FC = () => {
     setModalIsOpen(false);
   };
 
-  const baseButtonStyle: React.CSSProperties = {
-    padding: '10px 18px',
-    border: '1px solid var(--border-subtle)',
-    borderRadius: '8px',
-    background: 'var(--bg-element)',
-    color: 'var(--text-primary)',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    transition: 'background 0.2s, border-color 0.2s',
-  };
-
-  const refreshButtonStyle: React.CSSProperties = {
-    ...baseButtonStyle,
-    color: loading ? 'var(--text-secondary)' : 'var(--text-primary)',
-    cursor: loading ? 'not-allowed' : 'pointer',
-  };
-
-  const clearButtonStyle: React.CSSProperties = {
-    ...baseButtonStyle,
-    color: 'var(--danger-text)',
-    borderColor: 'var(--danger-border)',
-    background: 'var(--danger-bg)',
-  };
-
-  const disabledClearStyle: React.CSSProperties = {
-    ...clearButtonStyle,
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  }
-
   return (
     <div style={{ padding: '40px', maxWidth: '1600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
@@ -101,26 +68,21 @@ const Jobs: React.FC = () => {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button
+          <Button
             onClick={() => refetch()}
-            disabled={loading}
-            style={refreshButtonStyle}
-            onMouseEnter={(e) => !loading && (e.currentTarget.style.borderColor = 'var(--border-focus)')}
-            onMouseLeave={(e) => !loading && (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+            isLoading={loading}
           >
             <FiRefreshCw className={loading ? 'animate-spin' : ''} />
             {loading ? 'Refreshing...' : 'Refresh'}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleClearJobs}
-            disabled={loading || allJobs.length === 0}
-            style={loading || allJobs.length === 0 ? disabledClearStyle : clearButtonStyle}
-            onMouseEnter={(e) => !(loading || allJobs.length === 0) && (e.currentTarget.style.background = 'var(--danger-bg-hover)')}
-            onMouseLeave={(e) => !(loading || allJobs.length === 0) && (e.currentTarget.style.background = 'var(--danger-bg)')}
+            disabled={allJobs.length === 0}
+            variant="danger"
           >
             <FiTrash2 />
             Clear
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -26,7 +26,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs }) => {
   const getStatusBg = (status: string) => {
     switch (status) {
       case 'Completed':
-        return 'var(--accent-success-bg)'; // uses your rgba
+        return 'var(--accent-success-bg)'; 
       case 'Running':
         return '#f59e0b20';
       case 'Failed':

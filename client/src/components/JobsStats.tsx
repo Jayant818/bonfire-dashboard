@@ -62,7 +62,7 @@ const JobsStats: React.FC<JobsStatsProps> = ({ jobs }) => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: index === 0 ? '200px' : '120px', // Even Bigger minHeight for Total Jobs
+            minHeight: index === 0 ? '200px' : '120px', // Bigger minHeight for Total Jobs
             height: '100%',
             ...getGridStyle(index),
           }}
@@ -72,7 +72,7 @@ const JobsStats: React.FC<JobsStatsProps> = ({ jobs }) => {
           </span>
           <span
             style={{
-              fontSize: index === 0 ? '64px' : '32px', // Even Bigger font size for Total Jobs value
+              fontSize: index === 0 ? '64px' : '32px', // Bigger font size for Total Jobs value
               fontWeight: 'bold',
               color: 'var(--text-primary)',
               fontFamily: 'Geist Mono, monospace',

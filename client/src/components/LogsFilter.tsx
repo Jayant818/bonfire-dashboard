@@ -1,8 +1,8 @@
 import React from 'react';
 import Select from './common/Select';
+import Button from './common/Button';
 import { 
   inputStyle, 
-  buttonStyle, 
   filterContainerStyle, 
   filterGridStyle, 
   labelStyle 
@@ -83,14 +83,9 @@ const LogsFilter: React.FC<LogsFilterProps> = ({ filters, onFilterChange }) => {
 
       {hasActiveFilters && (
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button 
-            onClick={clearFilters} 
-            style={buttonStyle}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--border-subtle)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-element)'}
-          >
+          <Button onClick={clearFilters}>
             Clear Filters
-          </button>
+          </Button>
         </div>
       )}
     </div>

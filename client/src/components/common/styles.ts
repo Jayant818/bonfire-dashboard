@@ -19,18 +19,6 @@ export const selectStyle: React.CSSProperties = {
   paddingRight: '32px',
 };
 
-export const buttonStyle: React.CSSProperties = {
-  padding: '10px 20px',
-  background: 'var(--bg-element)',
-  border: '1px solid var(--border-subtle)',
-  borderRadius: '8px',
-  color: 'var(--text-primary)',
-  fontSize: '14px',
-  fontWeight: '600',
-  cursor: 'pointer',
-  transition: 'background 0.2s',
-};
-
 export const filterContainerStyle: React.CSSProperties = {
   background: 'var(--bg-card)',
   padding: '24px',
