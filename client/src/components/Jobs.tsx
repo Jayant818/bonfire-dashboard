@@ -93,8 +93,14 @@ const Jobs: React.FC = () => {
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
         onConfirm={confirmClearJobs}
+        aria={{ labelledby: 'modal-confirm-clear-jobs-title' }}
       >
-        <h2>Confirm Clear</h2>
+        <h2
+          id="modal-confirm-clear-jobs-title"
+          style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}
+        >
+          Confirm Clear
+        </h2>
         <p>Are you sure you want to clear all jobs?</p>
       </CustomModal>
     </div>

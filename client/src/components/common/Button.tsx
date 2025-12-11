@@ -56,10 +56,7 @@ const Button: React.FC<ButtonProps> = ({
   const combinedStyle = {
     ...baseStyle,
     ...getVariantStyle(),
-    // Re-apply style prop to allow overriding variant styles if absolutely necessary, 
-    // though variant logic should handle most cases.
     ...style, 
-    // Ensure critical overrides like cursor are respected if disabled
     cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
   };
 

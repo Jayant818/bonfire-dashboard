@@ -74,12 +74,12 @@ const LatencyChart: React.FC<LatencyChartProps> = ({ nodes }) => {
           >
             <defs>
               <linearGradient id="latencyBarGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-success)" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="var(--accent-success)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity={0.3} />
               </linearGradient>
               <linearGradient id="latencyDangerGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-danger)" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="var(--accent-danger)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
               </linearGradient>
             </defs>
             <CartesianGrid 

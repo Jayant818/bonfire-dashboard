@@ -6,6 +6,12 @@ interface CustomModalProps {
   onClose: () => void;
   onConfirm: () => void;
   children: React.ReactNode;
+  aria?: {
+    labelledby?: string;
+    describedby?: string;
+    modal?: boolean;
+    [key: string]: any;
+  };
 }
 
 const customStyles = {
@@ -56,13 +62,14 @@ const confirmButtonStyle: React.CSSProperties = {
   color: 'white',
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, onConfirm, children }) => {
+const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, onConfirm, children, aria }) => {
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
       style={customStyles}
       contentLabel="Confirmation Modal"
+      aria={aria}
     >
       <div style={{ marginBottom: '24px' }}>{children}</div>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

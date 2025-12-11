@@ -1,4 +1,22 @@
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipData {
+  pubkey: string;
+  latency: number;
+  hw: {
+    cpu_type: string;
+    cpu_cores: number;
+    memory_bytes: number;
+  };
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: TooltipData;
+  }>;
+  label?: string | number;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (

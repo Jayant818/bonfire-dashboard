@@ -77,8 +77,14 @@ const Logs: React.FC = () => {
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
         onConfirm={confirmClearLogs}
+        aria={{ labelledby: 'modal-confirm-clear-title' }}
       >
-        <h2>Confirm Clear</h2>
+        <h2
+          id="modal-confirm-clear-title"
+          style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}
+        >
+          Confirm Clear
+        </h2>
         <p>Are you sure you want to clear all logs?</p>
       </CustomModal>
     </div>
