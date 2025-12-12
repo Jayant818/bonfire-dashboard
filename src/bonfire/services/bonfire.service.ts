@@ -46,7 +46,6 @@ export interface HistoricalLogFilter {
   image_id?: string;
   node_id?: string;
   search?: string;
-  level?: string;
   from?: string;
   to?: string;
   page?: number;
@@ -57,7 +56,6 @@ export interface HistoricalLogFilter {
 export interface HistoricalLogEntry {
   id: string;
   timestamp: string;
-  level: string;
   message: string;
   kind: 'stdout' | 'stderr' | 'system';
   job_id?: string;
@@ -410,7 +408,6 @@ export class BonfireService {
       if (filter.image_id) params.image_id = filter.image_id;
       if (filter.node_id) params.node_id = filter.node_id;
       if (filter.search) params.search = filter.search;
-      if (filter.level) params.level = filter.level;
       if (filter.from) params.from = filter.from;
       if (filter.to) params.to = filter.to;
       if (filter.order) params.order = filter.order;
