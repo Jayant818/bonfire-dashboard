@@ -14,7 +14,14 @@ const Logs: React.FC = () => {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const { logs: allLogs, loading, clearLogs } = useLogs();
+  const { 
+    logs: allLogs, 
+    loading, 
+    clearLogs,
+    loadMoreHistory,
+    hasMoreHistory,
+    loadingHistory
+  } = useLogs();
 
   const filteredLogs = useMemo(() => {
     let result = allLogs;
@@ -72,7 +79,12 @@ const Logs: React.FC = () => {
 
       <LogsFilter filters={filters} onFilterChange={handleFilterChange} />
 
-      <LogsTable logs={filteredLogs} />
+      <LogsTable 
+        logs={filteredLogs} 
+        onScrollTop={loadMoreHistory}
+        loadingHistory={loadingHistory}
+        hasMoreHistory={hasMoreHistory}
+      />
       <CustomModal
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}

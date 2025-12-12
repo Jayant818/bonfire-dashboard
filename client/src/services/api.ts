@@ -15,6 +15,17 @@ export const api = {
     return response.json();
   },
 
+  async getHistoryLogs(page = 1, limit = 50, order = 'desc') {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      order,
+    });
+    const response = await fetch(`${BASE_URL}/logs/history?${params.toString()}`);
+    if (!response.ok) throw new Error('Failed to fetch historical logs');
+    return response.json();
+  },
+
   getLogsStream() {
     return new EventSource(`${BASE_URL}/logs/stream`);
   },

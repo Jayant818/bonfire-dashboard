@@ -1,19 +1,65 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import { Log } from '../types';
 
 interface LogsTableProps {
   logs: Log[];
+  onScrollTop?: () => void;
+  loadingHistory?: boolean;
+  hasMoreHistory?: boolean;
 }
 
-const LogsTable: React.FC<LogsTableProps> = ({ logs }) => {
+const LogsTable: React.FC<LogsTableProps> = ({ 
+  logs, 
+  onScrollTop, 
+  loadingHistory = false, 
+  hasMoreHistory = false 
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const prevScrollHeightRef = useRef(0);
+  const prevLogCountRef = useRef(0);
 
-  useEffect(() => {
-    if (containerRef.current && expandedRow === null) {
+  // Handle scroll events
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    
+    // Check if at top to load history
+    if (scrollTop === 0 && hasMoreHistory && !loadingHistory && onScrollTop) {
+      prevScrollHeightRef.current = scrollHeight;
+      onScrollTop();
+    }
+
+    // Check if at bottom (with small threshold)
+    const atBottom = scrollHeight - scrollTop - clientHeight < 50;
+    setIsAtBottom(atBottom);
+  };
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+    
+    const { scrollHeight } = containerRef.current;
+    
+    // If we were at bottom or it's the first load, scroll to bottom
+    if (isAtBottom || prevLogCountRef.current === 0) {
+      containerRef.current.scrollTop = scrollHeight;
+    } 
+    // If we loaded history (prepend), restore scroll position
+    else if (prevScrollHeightRef.current > 0 && scrollHeight > prevScrollHeightRef.current) {
+      const diff = scrollHeight - prevScrollHeightRef.current;
+      containerRef.current.scrollTop += diff;
+      prevScrollHeightRef.current = 0;
+    }
+
+    prevLogCountRef.current = logs.length;
+  }, [logs, isAtBottom]);
+
+  const scrollToBottom = () => {
+    if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [logs]);
+  };
 
   const getSourceColor = (source: string) => {
     switch (source) {
@@ -44,14 +90,17 @@ const LogsTable: React.FC<LogsTableProps> = ({ logs }) => {
   };
 
   return (
+  <div style={{ position: 'relative' }}>
     <div
       ref={containerRef}
+      onScroll={handleScroll}
       style={{
         background: 'var(--bg-card)',
         borderRadius: '12px',
         border: '1px solid var(--border-subtle)',
         maxHeight: '600px',
         overflow: 'auto',
+        position: 'relative',
       }}
     >
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -77,6 +126,13 @@ const LogsTable: React.FC<LogsTableProps> = ({ logs }) => {
           </tr>
         </thead>
         <tbody>
+          {loadingHistory && (
+            <tr>
+              <td colSpan={6} style={{ padding: '8px', textAlign: 'center', color: '#94a3b8', fontSize: '12px', background: '#0f172a' }}>
+                Loading older logs...
+              </td>
+            </tr>
+          )}
           {logs.length === 0 ? (
             <tr>
               <td
@@ -221,6 +277,32 @@ const LogsTable: React.FC<LogsTableProps> = ({ logs }) => {
           )}
         </tbody>
       </table>
+    </div>
+    {!isAtBottom && logs.length > 0 && (
+      <button
+        onClick={scrollToBottom}
+        style={{
+          position: 'absolute',
+          bottom: '24px',
+          right: '24px',
+          background: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '40px',
+          height: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          zIndex: 10,
+        }}
+        title="Scroll to bottom"
+      >
+        <span style={{ fontSize: '20px' }}>↓</span>
+      </button>
+    )}
     </div>
   );
 };

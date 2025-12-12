@@ -40,6 +40,55 @@ export interface Job {
   updated_at: string;
 }
 
+export interface HistoricalLogFilter {
+  source?: string;
+  job_id?: string;
+  image_id?: string;
+  node_id?: string;
+  search?: string;
+  from?: string;
+  to?: string;
+  page?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface HistoricalLogEntry {
+  id: string;
+  timestamp: string;
+  message: string;
+  kind: 'stdout' | 'stderr' | 'system';
+  job_id?: string;
+  image_id?: string;
+  node_id?: string;
+  meta?: Record<string, unknown>;
+}
+
+export interface HistoricalLogsResponse {
+  success: boolean;
+  data: HistoricalLogEntry[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+  };
+}
+
+interface HistoricalLogsQueryParams {
+  page: number;
+  limit: number;
+  kind?: string;
+  job_id?: string;
+  image_id?: string;
+  node_id?: string;
+  search?: string;
+  level?: string;
+  from?: string;
+  to?: string;
+  order?: 'asc' | 'desc';
+}
+
 @Injectable()
 export class BonfireService {
   private readonly BONFIRE_API = 'https://bonfire.bonsol.org';
@@ -356,6 +405,52 @@ export class BonfireService {
       
       // return dummyJobs;
       return [];
+    }
+  }
+
+  async getHistoricalLogs(
+    filter: HistoricalLogFilter
+  ): Promise<HistoricalLogsResponse> {
+    try {
+      const params: HistoricalLogsQueryParams = {
+        page: filter.page || 1,
+        limit: filter.limit || 50,
+      };
+
+      if (filter.source) params.kind = filter.source;
+      if (filter.job_id) params.job_id = filter.job_id;
+      if (filter.image_id) params.image_id = filter.image_id;
+      if (filter.node_id) params.node_id = filter.node_id;
+      if (filter.search) params.search = filter.search;
+      if (filter.from) params.from = filter.from;
+      if (filter.to) params.to = filter.to;
+      if (filter.order) params.order = filter.order;
+
+      const response = await axios.get<HistoricalLogsResponse>(
+        `${this.BONFIRE_API}/logs/history`,
+        {
+          params,
+          timeout: 5000,
+        }
+      );
+
+      return response.data;
+    } catch (error: any) {
+      console.error(
+        "[getHistoricalLogs] Failed to fetch historical logs from Bonfire:",
+        error?.message ?? error
+      );
+
+      return {
+        success: false,
+        data: [],
+        pagination: {
+          page: filter.page ?? 1,
+          limit: filter.limit ?? 50,
+          total: 0,
+          total_pages: 0,
+        },
+      };
     }
   }
 
