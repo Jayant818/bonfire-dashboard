@@ -61,7 +61,7 @@ export interface HistoricalLogEntry {
   job_id?: string;
   image_id?: string;
   node_id?: string;
-  meta?: any;
+  meta?: Record<string, unknown>;
 }
 
 export interface HistoricalLogsResponse {
@@ -73,6 +73,20 @@ export interface HistoricalLogsResponse {
     total: number;
     total_pages: number;
   };
+}
+
+interface HistoricalLogsQueryParams {
+  page: number;
+  limit: number;
+  kind?: string;
+  job_id?: string;
+  image_id?: string;
+  node_id?: string;
+  search?: string;
+  level?: string;
+  from?: string;
+  to?: string;
+  order?: 'asc' | 'desc';
 }
 
 @Injectable()
@@ -398,7 +412,7 @@ export class BonfireService {
     filter: HistoricalLogFilter
   ): Promise<HistoricalLogsResponse> {
     try {
-      const params: any = {
+      const params: HistoricalLogsQueryParams = {
         page: filter.page || 1,
         limit: filter.limit || 50,
       };
@@ -431,8 +445,8 @@ export class BonfireService {
         success: false,
         data: [],
         pagination: {
-          page: Number(filter.page) || 1,
-          limit: Number(filter.limit) || 50,
+          page: filter.page ?? 1,
+          limit: filter.limit ?? 50,
           total: 0,
           total_pages: 0,
         },

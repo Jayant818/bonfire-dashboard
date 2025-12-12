@@ -1,6 +1,7 @@
 import { Controller, Get, Sse, Query } from '@nestjs/common';
-import { BonfireService, HistoricalLogFilter } from './services/bonfire.service';
+import { BonfireService } from './services/bonfire.service';
 import { SolanaService } from './services/solana.service';
+import { GetHistoricalLogsDto } from './dto/get-historical-logs.dto';
 import { Observable } from 'rxjs';
 
 @Controller('api')
@@ -26,7 +27,7 @@ export class BonfireController {
   }
 
   @Get('logs/history')
-  async getHistoricalLogs(@Query() filter: HistoricalLogFilter) {
+  async getHistoricalLogs(@Query() filter: GetHistoricalLogsDto) {
     return this.bonfireService.getHistoricalLogs(filter);
   }
 

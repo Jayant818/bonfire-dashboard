@@ -36,7 +36,7 @@ export const useLogs = () => {
     } finally {
       setLoadingHistory(false);
     }
-  }, [page, loadingHistory, hasMoreHistory]);
+  }, [page, loadingHistory, hasMoreHistory, transformLog]);
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
@@ -72,8 +72,13 @@ export const useLogs = () => {
           if (!isMounted) return;
           try {
             const newLog = JSON.parse(event.data);
+            const MAX_LOGS = 5000;
             setLogs((prevLogs) => {
-              return [...prevLogs, newLog];
+              const updatedLogs = [...prevLogs, newLog];
+              if (updatedLogs.length > MAX_LOGS) {
+                return updatedLogs.slice(updatedLogs.length - MAX_LOGS);
+              }
+              return updatedLogs;
             });
           } catch (err) {
             console.error('Failed to parse log:', err);
