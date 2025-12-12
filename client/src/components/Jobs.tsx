@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { FiRefreshCw, FiTrash2 } from 'react-icons/fi';
 import JobsFilter from './JobsFilter';
 import JobsTable from './JobsTable';
 import JobsStats from './JobsStats';
+import CustomModal from './Modal';
 import { useJobs } from '../hooks/useJobs';
+import Button from './common/Button';
 
 const Jobs: React.FC = () => {
   const [filters, setFilters] = useState({
@@ -10,6 +13,7 @@ const Jobs: React.FC = () => {
     executionId: '',
     node: '',
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { jobs: allJobs, loading, refetch, clearJobs } = useJobs();
 
@@ -44,69 +48,61 @@ const Jobs: React.FC = () => {
   };
 
   const handleClearJobs = () => {
-    if (window.confirm('Are you sure you want to clear all jobs?')) {
-      clearJobs();
-    }
+    setModalIsOpen(true);
+  };
+
+  const confirmClearJobs = () => {
+    clearJobs();
+    setModalIsOpen(false);
   };
 
   return (
-    <div style={{ padding: '40px' }}>
+    <div style={{ padding: '40px', maxWidth: '1600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
         <div>
           <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>
             Jobs
           </h1>
-          <p style={{ color: '#64748b', marginBottom: '32px' }}>
-            Auto-refreshing every 5 seconds • {filteredJobs.length} jobs
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>
+            Auto-refreshing every 5 seconds • {filteredJobs.length} jobs found
           </p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button
+          <Button
             onClick={() => refetch()}
-            disabled={loading}
-            style={{
-              padding: '12px 24px',
-              background: loading ? '#334155' : '#10b981',
-              border: 'none',
-              borderRadius: '8px',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
+            isLoading={loading}
           >
-            {loading ? '↻ Refreshing...' : '↻ Refresh'}
-          </button>
-          <button
+            <FiRefreshCw className={loading ? 'animate-spin' : ''} />
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </Button>
+          <Button
             onClick={handleClearJobs}
-            disabled={loading || allJobs.length === 0}
-            style={{
-              padding: '12px 24px',
-              background: loading || allJobs.length === 0 ? '#334155' : '#ef4444',
-              border: 'none',
-              borderRadius: '8px',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: loading || allJobs.length === 0 ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
+            disabled={allJobs.length === 0}
+            variant="danger"
           >
-            🗑️ Clear
-          </button>
+            <FiTrash2 />
+            Clear
+          </Button>
         </div>
       </div>
 
       <JobsStats jobs={allJobs} />
-
       <JobsFilter filters={filters} onFilterChange={handleFilterChange} />
-
-      <JobsTable jobs={filteredJobs} key={JSON.stringify(filters)} />
+      <JobsTable jobs={filteredJobs} />
+      <CustomModal
+        isOpen={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        onConfirm={confirmClearJobs}
+        aria={{ labelledby: 'modal-confirm-clear-jobs-title' }}
+      >
+        <h2
+          id="modal-confirm-clear-jobs-title"
+          style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}
+        >
+          Confirm Clear
+        </h2>
+        <p>Are you sure you want to clear all jobs?</p>
+      </CustomModal>
     </div>
   );
 };

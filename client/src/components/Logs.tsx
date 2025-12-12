@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { FiTrash2 } from 'react-icons/fi';
 import LogsFilter from './LogsFilter';
 import LogsTable from './LogsTable';
+import CustomModal from './Modal';
 import { useLogs } from '../hooks/useLogs';
+import Button from './common/Button';
 
 const Logs: React.FC = () => {
   const [filters, setFilters] = useState({
@@ -9,6 +12,7 @@ const Logs: React.FC = () => {
     imageId: '',
     jobId: '',
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { 
     logs: allLogs, 
@@ -44,9 +48,12 @@ const Logs: React.FC = () => {
   };
 
   const handleClearLogs = () => {
-    if (window.confirm('Are you sure you want to clear all logs?')) {
-      clearLogs();
-    }
+    setModalIsOpen(true);
+  };
+
+  const confirmClearLogs = () => {
+    clearLogs();
+    setModalIsOpen(false);
   };
 
   return (
@@ -60,25 +67,14 @@ const Logs: React.FC = () => {
             Live stream of prover execution logs • {filteredLogs.length} logs {loading && '• Connecting...'}
           </p>
         </div>
-        <button
+        <Button
           onClick={handleClearLogs}
           disabled={loading || allLogs.length === 0}
-          style={{
-            padding: '12px 24px',
-            background: loading || allLogs.length === 0 ? '#334155' : '#ef4444',
-            border: 'none',
-            borderRadius: '8px',
-            color: '#fff',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: loading || allLogs.length === 0 ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
+          variant="danger"
         >
-          🗑️ Clear Logs
-        </button>
+          <FiTrash2 />
+          Clear Logs
+        </Button>
       </div>
 
       <LogsFilter filters={filters} onFilterChange={handleFilterChange} />
@@ -89,6 +85,20 @@ const Logs: React.FC = () => {
         loadingHistory={loadingHistory}
         hasMoreHistory={hasMoreHistory}
       />
+      <CustomModal
+        isOpen={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        onConfirm={confirmClearLogs}
+        aria={{ labelledby: 'modal-confirm-clear-title' }}
+      >
+        <h2
+          id="modal-confirm-clear-title"
+          style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}
+        >
+          Confirm Clear
+        </h2>
+        <p>Are you sure you want to clear all logs?</p>
+      </CustomModal>
     </div>
   );
 };

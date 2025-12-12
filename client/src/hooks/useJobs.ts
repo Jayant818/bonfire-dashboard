@@ -2,6 +2,17 @@ import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { Job } from '../types';
 
+const mapJobStatus = (status: string): string => {
+  switch (status) {
+    case 'Claimed':
+      return 'Running';
+    case 'Done':
+      return 'Completed';
+    default:
+      return status;
+  }
+};
+
 export const useJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +22,11 @@ export const useJobs = () => {
     try {
       setLoading(true);
       const data = await api.getJobs();
-      setJobs(data);
+      const mappedJobs = data.map((job: Job) => ({
+        ...job,
+        status: mapJobStatus(job.status),
+      }));
+      setJobs(mappedJobs);
       setError(null);
     } catch (err) {
       setError('Failed to fetch jobs');

@@ -64,11 +64,11 @@ const LogsTable: React.FC<LogsTableProps> = ({
   const getSourceColor = (source: string) => {
     switch (source) {
       case 'Stderr':
-        return '#ef4444';
+        return 'var(--accent-danger)';
       case 'Stdout':
-        return '#10b981';
+        return 'var(--accent-success)';
       default:
-        return '#94a3b8';
+        return 'var(--text-tertiary)';
     }
   };
 
@@ -95,32 +95,32 @@ const LogsTable: React.FC<LogsTableProps> = ({
       ref={containerRef}
       onScroll={handleScroll}
       style={{
-        background: '#1e293b',
+        background: 'var(--bg-card)',
         borderRadius: '12px',
-        border: '1px solid #334155',
+        border: '1px solid var(--border-subtle)',
         maxHeight: '600px',
         overflow: 'auto',
         position: 'relative',
       }}
     >
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead style={{ position: 'sticky', top: 0, background: '#0f172a', zIndex: 1 }}>
-          <tr style={{ borderBottom: '1px solid #334155' }}>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8', width: '40px' }}>
+        <thead style={{ position: 'sticky', top: 0, background: 'var(--bg-card)', zIndex: 1 }}>
+          <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', width: '40px' }}>
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Timestamp
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Source
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Message
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Job ID
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Image ID
             </th>
           </tr>
@@ -140,7 +140,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                 style={{
                   padding: '40px',
                   textAlign: 'center',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                 }}
               >
                 No logs found. Waiting for logs...
@@ -151,16 +151,23 @@ const LogsTable: React.FC<LogsTableProps> = ({
               <React.Fragment key={index}>
                 <tr
                   style={{
-                    borderBottom: expandedRow === index ? 'none' : index < logs.length - 1 ? '1px solid #334155' : 'none',
+                    borderBottom: expandedRow === index ? 'none' : index < logs.length - 1 ? '1px solid var(--border-subtle)' : 'none',
                     cursor: 'pointer',
-                    background: expandedRow === index ? '#0f172a' : 'transparent',
+                    background: expandedRow === index ? 'var(--bg-element)' : 'transparent',
+                    transition: 'background 0.2s',
                   }}
                   onClick={() => toggleRow(index)}
+                  onMouseEnter={(e) => {
+                    if (expandedRow !== index) e.currentTarget.style.background = 'var(--bg-element)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (expandedRow !== index) e.currentTarget.style.background = 'transparent';
+                  }}
                 >
-                  <td style={{ padding: '12px 16px', fontSize: '14px' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '14px', color: 'var(--text-tertiary)' }}>
                     {expandedRow === index ? '▼' : '▶'}
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#94a3b8', fontFamily: 'monospace' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-secondary)', fontFamily: 'Geist Mono, monospace' }}>
                     {formatTimestamp(log.timestamp)}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
@@ -177,35 +184,35 @@ const LogsTable: React.FC<LogsTableProps> = ({
                       {log.source}
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', color: '#e2e8f0', fontFamily: 'monospace' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'Geist Mono, monospace' }}>
                     {truncate(log.log, 50)}
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#3b82f6', fontFamily: 'monospace' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#3b82f6', fontFamily: 'Geist Mono, monospace' }}>
                     {truncate(log.job_id, 12)}
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#8b5cf6', fontFamily: 'monospace' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#8b5cf6', fontFamily: 'Geist Mono, monospace' }}>
                     {truncate(log.image_id, 12)}
                   </td>
                 </tr>
                 {expandedRow === index && (
-                  <tr style={{ borderBottom: index < logs.length - 1 ? '1px solid #334155' : 'none' }}>
-                    <td colSpan={6} style={{ padding: '24px', background: '#0f172a' }}>
+                  <tr style={{ borderBottom: index < logs.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                    <td colSpan={6} style={{ padding: '24px', background: 'var(--bg-element)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
                         <div>
-                          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '16px' }}>
+                          <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--accent-success)', marginBottom: '16px' }}>
                             Log Details
                           </h3>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <div>
-                              <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                                 Timestamp
                               </span>
-                              <span style={{ fontSize: '14px', color: '#e2e8f0', fontFamily: 'monospace' }}>
+                              <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'Geist Mono, monospace' }}>
                                 {formatTimestamp(log.timestamp)}
                               </span>
                             </div>
                             <div>
-                              <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                                 Source
                               </span>
                               <span
@@ -223,34 +230,34 @@ const LogsTable: React.FC<LogsTableProps> = ({
                               </span>
                             </div>
                             <div>
-                              <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                                 Job ID
                               </span>
-                              <span style={{ fontSize: '14px', color: '#3b82f6', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                              <span style={{ fontSize: '14px', color: '#3b82f6', fontFamily: 'Geist Mono, monospace', wordBreak: 'break-all' }}>
                                 {log.job_id}
                               </span>
                             </div>
                             <div>
-                              <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                                 Image ID
                               </span>
-                              <span style={{ fontSize: '14px', color: '#8b5cf6', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                              <span style={{ fontSize: '14px', color: '#8b5cf6', fontFamily: 'Geist Mono, monospace', wordBreak: 'break-all' }}>
                                 {log.image_id}
                               </span>
                             </div>
                             <div>
-                              <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
                                 Full Message
                               </span>
                               <pre
                                 style={{
                                   fontSize: '14px',
-                                  color: '#e2e8f0',
-                                  fontFamily: 'monospace',
-                                  background: '#1e293b',
+                                  color: 'var(--text-primary)',
+                                  fontFamily: 'Geist Mono, monospace',
+                                  background: 'var(--bg-app)', // Darker for code block
                                   padding: '12px',
                                   borderRadius: '8px',
-                                  border: '1px solid #334155',
+                                  border: '1px solid var(--border-subtle)',
                                   whiteSpace: 'pre-wrap',
                                   wordBreak: 'break-word',
                                   margin: 0,
