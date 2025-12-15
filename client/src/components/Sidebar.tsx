@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiHome, FiCpu, FiTool, FiFileText } from 'react-icons/fi'; // Importing Feather icons
 
 interface SidebarProps {
   currentView: string;
@@ -7,43 +8,69 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '' },
-    { id: 'nodes', label: 'Nodes', icon: '' },
-    { id: 'jobs', label: 'Jobs', icon: '' },
-    { id: 'logs', label: 'Logs', icon: '' },
+    { id: 'dashboard', label: 'Dashboard', icon: <FiHome /> },
+    { id: 'nodes', label: 'Nodes', icon: <FiCpu /> },
+    { id: 'jobs', label: 'Jobs', icon: <FiTool /> },
+    { id: 'logs', label: 'Logs', icon: <FiFileText /> },
   ];
 
   return (
     <div
       style={{
         width: '250px',
-        background: '#1e293b',
+        background: 'var(--bg-app)',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid #334155',
+        borderRight: '1px solid var(--border-subtle)',
       }}
     >
-      <div style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>
-          BONFIRE
-        </h1>
-        <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-          Prover Network
-        </p>
+   <div
+  style={{
+    marginBottom: '40px',
+    paddingLeft: '12px',
+  }}
+>
+  <h1
+    style={{
+      fontSize: '32px',
+      fontWeight: 900,
+      letterSpacing: '-0.5px',
+      margin: 0,
+      textShadow: '0 0 12px rgba(0, 255, 120, 0.35)',
+      cursor: 'default',
+    }}
+  >
+    BONFIRE
+  </h1>
+
+  <p
+    style={{
+      fontSize: '13px',
+      color: 'var(--text-tertiary)',
+      marginTop: '6px',
+      letterSpacing: '0.3px',
+    }}
+  >
+    Prover Network
+  </p>
+  </div>
+
+      <div style={{ paddingLeft: '12px', marginBottom: '12px', fontSize: '12px', fontWeight: '600', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        Menu
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => onViewChange(item.id as any)}
             style={{
-              padding: '12px 16px',
-              background: currentView === item.id ? '#334155' : 'transparent',
+              padding: '10px 12px',
+              background: currentView === item.id ? 'var(--bg-element)' : 'transparent',
               border: 'none',
-              borderRadius: '8px',
-              color: currentView === item.id ? '#10b981' : '#94a3b8',
+              borderRadius: '6px',
+              color: currentView === item.id ? 'var(--text-primary)' : 'var(--text-secondary)',
               cursor: 'pointer',
               textAlign: 'left',
               fontSize: '14px',
@@ -51,20 +78,22 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              transition: 'all 0.2s',
+              transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
               if (currentView !== item.id) {
-                e.currentTarget.style.background = '#2d3748';
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'var(--bg-element)';
               }
             }}
             onMouseLeave={(e) => {
               if (currentView !== item.id) {
+                e.currentTarget.style.color = 'var(--text-secondary)';
                 e.currentTarget.style.background = 'transparent';
               }
             }}
           >
-            <span style={{ fontSize: '18px' }}>{item.icon}</span>
+            <span style={{ fontSize: '16px', opacity: 0.8 }}>{item.icon}</span>
             {item.label}
           </button>
         ))}

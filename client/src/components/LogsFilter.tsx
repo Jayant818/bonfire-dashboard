@@ -1,4 +1,12 @@
 import React from 'react';
+import Select from './common/Select';
+import Button from './common/Button';
+import { 
+  inputStyle, 
+  filterContainerStyle, 
+  filterGridStyle, 
+  labelStyle 
+} from './common/styles';
 
 interface LogsFilterProps {
   filters: {
@@ -22,65 +30,32 @@ const LogsFilter: React.FC<LogsFilterProps> = ({ filters, onFilterChange }) => {
     });
   };
 
-  const inputStyle: React.CSSProperties = {
-    padding: '10px 12px',
-    background: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '8px',
-    color: '#e2e8f0',
-    fontSize: '14px',
-    outline: 'none',
-    width: '100%',
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    padding: '10px 20px',
-    background: '#334155',
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-  };
-
   const hasActiveFilters = filters.source || filters.imageId || filters.jobId;
 
   return (
-    <div
-      style={{
-        background: '#1e293b',
-        padding: '24px',
-        borderRadius: '12px',
-        border: '1px solid #334155',
-        marginBottom: '32px',
-      }}
-    >
+    <div style={filterContainerStyle}>
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '16px',
+          ...filterGridStyle,
           marginBottom: hasActiveFilters ? '16px' : '0',
         }}
       >
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>
+          <label style={labelStyle}>
             Source
           </label>
-          <select
+          <Select
             value={filters.source}
             onChange={(e) => handleChange('source', e.target.value)}
-            style={inputStyle}
           >
             <option value="">All Sources</option>
             <option value="Stdout">Stdout</option>
             <option value="Stderr">Stderr</option>
-          </select>
+          </Select>
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>
+          <label style={labelStyle}>
             Image ID
           </label>
           <input
@@ -93,7 +68,7 @@ const LogsFilter: React.FC<LogsFilterProps> = ({ filters, onFilterChange }) => {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>
+          <label style={labelStyle}>
             Job ID
           </label>
           <input
@@ -108,9 +83,9 @@ const LogsFilter: React.FC<LogsFilterProps> = ({ filters, onFilterChange }) => {
 
       {hasActiveFilters && (
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={clearFilters} style={buttonStyle}>
+          <Button onClick={clearFilters}>
             Clear Filters
-          </button>
+          </Button>
         </div>
       )}
     </div>
