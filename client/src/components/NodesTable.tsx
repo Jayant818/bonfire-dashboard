@@ -38,7 +38,7 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Pubkey
             </th>
-            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#94a3b8' }}>
+            <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
               Version
             </th>
             <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>
@@ -82,7 +82,7 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
                 <td style={{ padding: '16px', fontSize: '14px', fontFamily: 'Geist Mono, monospace', color: 'var(--accent-success)' }}>
                   {truncate(node.pubkey, 12)}
                 </td>
-                <td style={{ padding: '16px', fontSize: '14px', color: '#e2e8f0' }}>
+                <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)' }}>
                   {node.hw.version}
                 </td>
                 <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)' }}>
@@ -119,18 +119,10 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes }) => {
                             </span>
                           </div>
                           <div>
-                            <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                               Version
                             </span>
-                            <span style={{ fontSize: '14px', color: '#e2e8f0' }}>
-                              {node.hw.version}
-                            </span>
-                          </div>
-                          <div>
-                            <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>
-                              Version
-                            </span>
-                            <span style={{ fontSize: '14px', color: '#e2e8f0' }}>
+                            <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
                               {node.hw.version}
                             </span>
                           </div>
